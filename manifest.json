@@ -1,18 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Image Aspect Ratio Cropper",
-  "version": "1.0",
-  "description": "Crop images to 16:9 aspect ratio in new tab",
-  "permissions": ["activeTab", "scripting"],
+  "version": "2.0",
+  "description": "Crop images to precise 16:9 aspect ratio with instant save",
+  "permissions": ["activeTab", "scripting", "downloads"],
   "host_permissions": ["<all_urls>"],
   "action": {
-    "default_title": "Crop Image to 16:9",
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "./icons/icon.png",
-      "48": "./icons/icon.png",
-      "128": "./icons/icon.png"
-    }
+    "default_title": "Crop Image to 16:9"
+  },
+  "background": {
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
