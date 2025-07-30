@@ -3,6 +3,8 @@ html {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  background: #1e1e1e;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 #overlay {
@@ -11,50 +13,257 @@ html {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(249, 247, 247, 0.427);
+  background: #1e1e1e;
   z-index: 999999;
+  cursor: grab;
+  user-select: none;
+}
+
+#overlay:active {
+  cursor: grabbing;
 }
 
 #crop-frame {
   position: absolute;
-  width: 60%;
-  aspect-ratio: 16 / 9;
-  border: 2px dashed white;
-  top: 20%;
-  left: 20%;
+  border: 2px solid #fff;
   cursor: move;
-  z-index: 10;
+  z-index: 1000001;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
+  background: transparent;
+  transition: border-color 0.2s;
+}
+
+#crop-frame::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+}
+
+#crop-frame:hover {
+  border-color: #0078d4;
+}
+
+#crop-frame:active {
+  cursor: grabbing;
+}
+
+/* Corner handles visual indicators */
+#crop-frame::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to right, #fff 2px, transparent 2px),
+    linear-gradient(to bottom, #fff 2px, transparent 2px),
+    linear-gradient(to right, #fff 2px, transparent 2px),
+    linear-gradient(to bottom, #fff 2px, transparent 2px),
+    linear-gradient(to left, #fff 2px, transparent 2px),
+    linear-gradient(to bottom, #fff 2px, transparent 2px),
+    linear-gradient(to left, #fff 2px, transparent 2px),
+    linear-gradient(to top, #fff 2px, transparent 2px);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 0, 100% 0, 100% 0, 100% 100%, 100% 100%, 0 100%,
+    0 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
 }
 
 #target-image {
   position: absolute;
   max-width: none;
-  z-index: 1;
+  max-height: none;
+  z-index: 1000000;
   pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
 }
 
-#save-crop-button {
+/* Toolbar */
+.toolbar {
   position: fixed;
-  bottom: 20px;
-  right: 80px; /* Move left so it doesn't overlap with close */
-  z-index: 20;
-  padding: 10px 20px;
-  background: #007bff;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(45, 45, 45, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000002;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Aspect ratio indicator */
+.aspect-indicator {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aspect-indicator::before {
+  content: "📐";
+  font-size: 16px;
+}
+
+/* Buttons */
+#save-crop-button {
+  padding: 10px 24px;
+  background: #0078d4;
   color: #fff;
   border: none;
   cursor: pointer;
-  margin-left: 10px;
-  border-radius: 5px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#save-crop-button:hover {
+  background: #106ebe;
+  transform: translateY(-1px);
+}
+
+#save-crop-button:active {
+  transform: translateY(0);
+}
+
+#save-crop-button::before {
+  content: "✓";
+  font-size: 16px;
 }
 
 #close-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 20;
   padding: 10px 20px;
-  background: white;
-  border: none;
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   cursor: pointer;
-  margin-left: 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+#close-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Instructions overlay */
+.instructions {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(45, 45, 45, 0.95);
+  backdrop-filter: blur(10px);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  z-index: 1000002;
+  max-width: 280px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.instructions h4 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #0078d4;
+}
+
+.instructions ul {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.6;
+}
+
+.instructions li {
+  margin: 8px 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Zoom indicator */
+.zoom-indicator {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  background: rgba(45, 45, 45, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #fff;
+  z-index: 1000002;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.zoom-indicator.visible {
+  opacity: 1;
+}
+
+/* Grid overlay (optional) */
+.grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000002;
+  opacity: 0.3;
+}
+
+.grid-overlay::before,
+.grid-overlay::after {
+  content: "";
+  position: absolute;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.grid-overlay::before {
+  top: 33.33%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  box-shadow: 0 33.33% 0 rgba(255, 255, 255, 0.2);
+}
+
+.grid-overlay::after {
+  left: 33.33%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  box-shadow: 33.33% 0 0 rgba(255, 255, 255, 0.2);
 }

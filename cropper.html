@@ -1,14 +1,39 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Cropper - Windows 10 Photos Style</title>
     <link rel="stylesheet" href="cropper.css" />
   </head>
   <body>
     <div id="overlay">
-      <div id="crop-frame" class="aspect-16-9"></div>
+      <div class="instructions">
+        <h4>Crop Image</h4>
+        <ul>
+          <li>Drag the white frame to position crop area</li>
+          <li>Click and drag background to pan image</li>
+          <li>Use mouse wheel to zoom in/out</li>
+          <li>Aspect ratio locked to 16:9</li>
+        </ul>
+      </div>
+
       <img id="target-image" />
-      <button id="save-crop-button">Save</button>
-      <button id="close-button">X</button>
+      <div id="crop-frame">
+        <div class="grid-overlay"></div>
+      </div>
+
+      <div class="zoom-indicator" id="zoom-indicator"></div>
+
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <div class="aspect-indicator">16:9 Aspect Ratio</div>
+        </div>
+        <div class="toolbar-right">
+          <button id="close-button">Cancel</button>
+          <button id="save-crop-button">Save</button>
+        </div>
+      </div>
     </div>
 
     <script src="cropper.js"></script>
